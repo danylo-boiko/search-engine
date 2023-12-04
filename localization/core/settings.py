@@ -1,9 +1,9 @@
 from lingua import Language
 
 
-class Config:
+class Settings:
     DEFAULT_LANGUAGE: Language = Language.ENGLISH
     SUPPORTED_LANGUAGES: set[Language] = {Language.ENGLISH, Language.UKRAINIAN}
 
 
-config = Config()
+settings = Settings()

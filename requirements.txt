@@ -1,0 +1,7 @@
+regex
+starlette
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+lingua-language-detector

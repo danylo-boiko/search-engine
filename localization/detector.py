@@ -1,12 +1,12 @@
 from lingua import LanguageDetectorBuilder
 
-from localization.core import config
+from localization.core import settings
 from localization.enums import Language
 
 
 class Detector:
     def __init__(self):
-        self.lingua_detector = LanguageDetectorBuilder.from_languages(*config.SUPPORTED_LANGUAGES).build()
+        self.lingua_detector = LanguageDetectorBuilder.from_languages(*settings.SUPPORTED_LANGUAGES).build()
 
     def detect(self, text: str, preferred_language: Language | None = None) -> Language:
         detected_language = self.lingua_detector.detect_language_of(text)
@@ -15,7 +15,7 @@ class Detector:
             if preferred_language:
                 return preferred_language
 
-            detected_language = config.DEFAULT_LANGUAGE
+            detected_language = settings.DEFAULT_LANGUAGE
 
         return Language.from_lingua_language(detected_language)
 
