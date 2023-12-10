@@ -4,8 +4,8 @@ from localization.core import settings
 from localization.enums import Language
 
 
-class Detector:
-    def __init__(self):
+class LanguageDetector:
+    def __init__(self) -> None:
         self.lingua_detector = LanguageDetectorBuilder.from_languages(*settings.SUPPORTED_LANGUAGES).build()
 
     def detect(self, text: str, preferred_language: Language | None = None) -> Language:
@@ -20,4 +20,4 @@ class Detector:
         return Language.from_lingua_language(detected_language)
 
 
-detector = Detector()
+language_detector = LanguageDetector()

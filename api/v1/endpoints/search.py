@@ -4,7 +4,7 @@ from uuid import uuid4
 from fastapi import APIRouter
 
 from api.schemas import SearchResult
-from localization import detector
+from localization import language_detector
 from localization.enums import Language
 
 router = APIRouter()
@@ -14,7 +14,7 @@ router = APIRouter()
 def search(query: str, preferred_language: Language | None = None) -> SearchResult:
     start_time = time()
 
-    language = detector.detect(text=query, preferred_language=preferred_language)
+    language = language_detector.detect(text=query, preferred_language=preferred_language)
 
     end_time = time()
 
