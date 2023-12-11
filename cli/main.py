@@ -9,6 +9,7 @@ path.append(dirname(__file__))
 
 if __name__ == "__main__":
     from cli.core import settings
+    from crawler import Crawler
 
     parser = ArgumentParser(prog=settings.PROJECT_TITLE)
 
@@ -16,3 +17,7 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--threads", type=int, default=settings.DEFAULT_THREADS_COUNT, help="Count of the crawler's parallel threads")
 
     args = parser.parse_args()
+
+    crawler = Crawler(args.url, args.threads)
+
+    crawler.run()

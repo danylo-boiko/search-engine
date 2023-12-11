@@ -14,7 +14,7 @@ router = APIRouter()
 def search(query: str, preferred_language: Language | None = None) -> SearchResult:
     start_time = time()
 
-    language = language_detector.detect(text=query, preferred_language=preferred_language)
+    language = language_detector.detect(query, preferred_language)
 
     end_time = time()
 
