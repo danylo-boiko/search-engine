@@ -1,5 +1,5 @@
 from hashlib import md5
-from logging import info, warning
+from logging import warning
 from threading import get_ident, Thread
 from urllib.robotparser import RobotFileParser
 
@@ -38,7 +38,7 @@ class Crawler:
             url = self.queue.get(timeout=1)
 
             if not url:
-                info(f"Thread {get_ident()} has no new urls for crawling")
+                warning(f"Thread {get_ident()} has no new urls for crawling")
                 continue
 
             page = self.__fetch_page(url)
@@ -49,7 +49,7 @@ class Crawler:
             content = self.content_extractor.extract_content(page)
             content_hash = self.__compute_content_hash(content)
 
-            print(url, content, content_hash)
+            print(url, content_hash)
 
             for url in self.content_extractor.extract_urls(page):
                 if self.__is_fetch_allowed(url):
