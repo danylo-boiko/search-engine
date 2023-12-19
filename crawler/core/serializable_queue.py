@@ -42,10 +42,7 @@ class SerializableQueue(Queue):
             return
 
         with open(file_name, "rb") as file:
-            loaded_queue = load(file)
-
-            if loaded_queue:
-                self.queue = loaded_queue
+            self.queue = load(file)
 
     def __get_file_name(self) -> str:
         return f"{self.queue_prefix}_queue.pkl"

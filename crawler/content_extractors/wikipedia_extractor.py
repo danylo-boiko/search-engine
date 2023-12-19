@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 
 from crawler.content_extractors import BaseExtractor
 from crawler.utils import extract_domain
+from localization.enums import Language
 
 
 class WikipediaExtractor(BaseExtractor):
@@ -13,6 +14,12 @@ class WikipediaExtractor(BaseExtractor):
     @staticmethod
     def get_allowed_subdomains() -> set[str]:
         return {".wikipedia.org"}
+
+    def get_page_language(self) -> Language:
+        return Language(self.domain.split(".")[0])
+
+    def extract_title(self, page: BeautifulSoup) -> str:
+        return page.title.text
 
     def extract_content(self, page: BeautifulSoup) -> str:
         content_items = [page.find(id="firstHeading")]

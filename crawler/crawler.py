@@ -1,4 +1,3 @@
-from hashlib import md5
 from logging import warning
 from threading import get_ident, Thread
 from urllib.robotparser import RobotFileParser
@@ -9,12 +8,14 @@ from requests import get, RequestException
 from crawler.content_extractors import ExtractorsFactory
 from crawler.core import SerializableQueue
 from crawler.utils import extract_domain, extract_scheme
+from index import Index
 
 
 class Crawler:
     def __init__(self, url: str | None, queue_prefix: str | None, threads_count: int) -> None:
         self.queue = SerializableQueue(url, queue_prefix)
         self.content_extractor = ExtractorsFactory.build(self.queue.head())
+        self.index = Index(self.content_extractor.get_page_language())
         self.threads = [Thread(target=self.__crawl) for _ in range(threads_count)]
         self.is_running = False
         self.robots = {}
@@ -43,14 +44,14 @@ class Crawler:
 
             page = self.__fetch_page(url)
 
-            content = self.content_extractor.extract_content(page)
-
-            if not content:
+            if not page:
                 continue
 
-            content_hash = self.__compute_content_hash(content)
+            title = self.content_extractor.extract_title(page)
+            content = self.content_extractor.extract_content(page)
 
-            print(url, content_hash)
+            if not self.index.add_document(title, url, content):
+                continue
 
             for url in self.content_extractor.extract_urls(page):
                 if self.__is_fetch_allowed(url):
@@ -75,6 +76,3 @@ class Crawler:
             self.robots[domain] = parser
 
         return self.robots[domain].can_fetch("*", url)
-
-    def __compute_content_hash(self, content: str) -> str:
-        return md5(content.encode()).hexdigest()
