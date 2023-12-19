@@ -43,10 +43,11 @@ class Crawler:
 
             page = self.__fetch_page(url)
 
-            if not page:
+            content = self.content_extractor.extract_content(page)
+
+            if not content:
                 continue
 
-            content = self.content_extractor.extract_content(page)
             content_hash = self.__compute_content_hash(content)
 
             print(url, content_hash)
@@ -58,10 +59,6 @@ class Crawler:
     def __fetch_page(self, url: str) -> BeautifulSoup | None:
         try:
             response = get(url, timeout=(3, 30))
-
-            if response.status_code != 200:
-                return None
-
             return BeautifulSoup(response.content, "html.parser")
         except RequestException:
             warning(f"Downloading content from url {url} failed")
