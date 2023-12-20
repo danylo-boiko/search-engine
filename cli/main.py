@@ -13,7 +13,7 @@ if __name__ == "__main__":
     from crawler import Crawler
     from crawler.utils import extract_domain
 
-    parser = ArgumentParser(prog=settings.PROJECT_TITLE)
+    parser = ArgumentParser(prog=settings.CLI_PROJECT_TITLE)
 
     parser.add_argument("-u", "--url", type=str, help="Url of the website to crawl")
     parser.add_argument("-q", "--queue", type=str, help="Crawler queue prefix (full website domain)")

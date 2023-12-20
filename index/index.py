@@ -18,7 +18,7 @@ class Index:
     def add_document(self, title: str, url: str, content: str) -> bool:
         content_hash = self.__compute_content_hash(content)
 
-        if self.collection.find_one({"content_hash": content_hash}):
+        if self.collection.find_one({"content_hash": content_hash}, {"_id": 1}):
             return False
 
         self.collection.insert_one({
@@ -36,4 +36,3 @@ class Index:
 
     def __compute_content_hash(self, content: str) -> str:
         return md5(content.encode()).hexdigest()
-

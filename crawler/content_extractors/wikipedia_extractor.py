@@ -10,6 +10,7 @@ from localization.enums import Language
 class WikipediaExtractor(BaseExtractor):
     def __init__(self, scheme: str, domain: str) -> None:
         super().__init__(scheme, domain)
+        self.cite_pattern = compile(r"\[\w+]")
 
     @staticmethod
     def get_allowed_subdomains() -> set[str]:
@@ -22,15 +23,10 @@ class WikipediaExtractor(BaseExtractor):
         return page.title.text
 
     def extract_content(self, page: BeautifulSoup) -> str:
-        cite_pattern = compile(r"\[\w+]")
+        content_items = []
 
-        content_items = [page.find(id="firstHeading")]
-        content_items.extend(page.find(id="mw-content-text").find_all("p"))
-
-        filtered_texts = []
-
-        for item in content_items:
-            item_text = sub(cite_pattern, "", item.get_text().replace("\n", ""))
+        for item in page.find(id="mw-content-text").find_all("p"):
+            item_text = sub(self.cite_pattern, "", item.get_text().replace("\n", ""))
 
             if not item_text or item_text.isspace():
                 continue
@@ -38,9 +34,9 @@ class WikipediaExtractor(BaseExtractor):
             if not item_text.endswith("."):
                 item_text += "."
 
-            filtered_texts.append(item_text)
+            content_items.append(item_text)
 
-        return " ".join(filtered_texts)
+        return " ".join(content_items)
 
     def extract_urls(self, page: BeautifulSoup) -> set[str]:
         urls = set()
