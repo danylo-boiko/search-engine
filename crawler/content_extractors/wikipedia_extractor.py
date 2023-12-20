@@ -1,4 +1,4 @@
-from re import compile
+from re import compile, sub
 
 from bs4 import BeautifulSoup
 
@@ -22,18 +22,25 @@ class WikipediaExtractor(BaseExtractor):
         return page.title.text
 
     def extract_content(self, page: BeautifulSoup) -> str:
+        cite_pattern = compile(r"\[\w+]")
+
         content_items = [page.find(id="firstHeading")]
+        content_items.extend(page.find(id="mw-content-text").find_all("p"))
 
-        for tag in page.find(id="mw-content-text").find_all(["p", "ul", "ol", "table"]):
-            if tag.name == "p":
-                content_items.append(tag)
-            elif tag.name in ("ul", "ol") and not (tag.has_attr("class") and "references" in tag["class"]):
-                content_items.extend(tag.find_all("li"))
-            elif tag.name == "table":
-                for row in tag.find_all("tr"):
-                    content_items.extend(row.find_all("td"))
+        filtered_texts = []
 
-        return " ".join(filter(None, [item.get_text(strip=True, separator=" ") for item in content_items]))
+        for item in content_items:
+            item_text = sub(cite_pattern, "", item.get_text().replace("\n", ""))
+
+            if not item_text or item_text.isspace():
+                continue
+
+            if not item_text.endswith("."):
+                item_text += "."
+
+            filtered_texts.append(item_text)
+
+        return " ".join(filtered_texts)
 
     def extract_urls(self, page: BeautifulSoup) -> set[str]:
         urls = set()
