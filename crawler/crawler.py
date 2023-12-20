@@ -59,7 +59,7 @@ class Crawler:
 
     def __fetch_page(self, url: str) -> BeautifulSoup | None:
         try:
-            response = get(url, timeout=(3, 30))
+            response = get(url, timeout=30)
             return BeautifulSoup(response.content, "html.parser")
         except RequestException:
             warning(f"Downloading content from url {url} failed")

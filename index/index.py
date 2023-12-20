@@ -1,7 +1,9 @@
 from hashlib import md5
+from logging import warning
 from time import time
 
 from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError, PyMongoError
 
 from index.core import settings
 from localization.enums import Language
@@ -16,20 +18,19 @@ class Index:
         self.__setup_indexes()
 
     def add_document(self, title: str, url: str, content: str) -> bool:
-        content_hash = self.__compute_content_hash(content)
-
-        if self.collection.find_one({"content_hash": content_hash}, {"_id": 1}):
+        try:
+            self.collection.insert_one({
+                "title": title,
+                "url": url,
+                "content": content,
+                "content_hash": self.__compute_content_hash(content),
+                "created_at": time()
+            })
+            return True
+        except PyMongoError as error:
+            if not isinstance(error, DuplicateKeyError):
+                warning(f"Creating index for url {url} failed")
             return False
-
-        self.collection.insert_one({
-            "title": title,
-            "url": url,
-            "content": content,
-            "content_hash": content_hash,
-            "created_at": time()
-        })
-
-        return True
 
     def __setup_indexes(self) -> None:
         self.collection.create_index("content_hash", unique=True)
