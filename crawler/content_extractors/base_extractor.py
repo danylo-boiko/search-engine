@@ -2,6 +2,8 @@ from abc import abstractmethod
 
 from bs4 import BeautifulSoup
 
+from localization.enums import Language
+
 
 class BaseExtractor:
     def __init__(self, scheme: str, domain: str) -> None:
@@ -11,6 +13,14 @@ class BaseExtractor:
     @staticmethod
     @abstractmethod
     def get_allowed_subdomains() -> set[str]:
+        pass
+
+    @abstractmethod
+    def get_page_language(self) -> Language:
+        pass
+
+    @abstractmethod
+    def extract_title(self, page: BeautifulSoup) -> str:
         pass
 
     @abstractmethod

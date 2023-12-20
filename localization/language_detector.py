@@ -1,21 +1,19 @@
 from lingua import LanguageDetectorBuilder
+from lingua import Language as LinguaLanguage
 
-from localization.core import settings
 from localization.enums import Language
 
 
 class LanguageDetector:
     def __init__(self) -> None:
-        self.lingua_detector = LanguageDetectorBuilder.from_languages(*settings.SUPPORTED_LANGUAGES).build()
+        self.supported_languages = {LinguaLanguage.ENGLISH, LinguaLanguage.UKRAINIAN}
+        self.lingua_detector = LanguageDetectorBuilder.from_languages(*self.supported_languages).build()
 
-    def detect(self, text: str, preferred_language: Language | None = None) -> Language:
+    def detect(self, text: str) -> Language | None:
         detected_language = self.lingua_detector.detect_language_of(text)
 
         if not detected_language:
-            if preferred_language:
-                return preferred_language
-
-            detected_language = settings.DEFAULT_LANGUAGE
+            return None
 
         return Language.from_lingua_language(detected_language)
 

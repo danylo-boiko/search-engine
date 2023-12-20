@@ -5,7 +5,7 @@ from api.core import settings
 from api.v1.api import api_router
 
 
-app = FastAPI(title=settings.PROJECT_TITLE)
+app = FastAPI(title=settings.API_PROJECT_TITLE)
 
 if settings.CORS_ORIGINS:
     app.add_middleware(CORSMiddleware, allow_origins=settings.CORS_ORIGINS, allow_methods=["GET"])

@@ -2,8 +2,8 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    CLI_PROJECT_TITLE: str = "Search engine CLI"
-    DEFAULT_THREADS_COUNT: int = 4
+    MONGO_CONNECTION_STRING: str
+    SEARCH_INDEX_DB: str
 
 
 settings = Settings()
