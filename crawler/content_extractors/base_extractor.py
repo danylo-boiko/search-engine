@@ -24,7 +24,7 @@ class BaseExtractor:
         pass
 
     @abstractmethod
-    def extract_content(self, page: BeautifulSoup) -> str:
+    def extract_content_items(self, page: BeautifulSoup) -> list[str]:
         pass
 
     @abstractmethod

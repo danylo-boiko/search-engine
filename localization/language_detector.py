@@ -16,6 +16,3 @@ class LanguageDetector:
             return None
 
         return Language.from_lingua_language(detected_language)
-
-
-language_detector = LanguageDetector()

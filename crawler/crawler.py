@@ -48,9 +48,9 @@ class Crawler:
                 continue
 
             title = self.content_extractor.extract_title(page)
-            content = self.content_extractor.extract_content(page)
+            content_items = self.content_extractor.extract_content_items(page)
 
-            if not self.index.add_document(title, url, content):
+            if not self.index.add_page(title, url, content_items):
                 continue
 
             for url in self.content_extractor.extract_urls(page):

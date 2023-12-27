@@ -1,1 +1,1 @@
-from .language_detector import language_detector
+from .language_detector import LanguageDetector

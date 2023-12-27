@@ -22,7 +22,7 @@ class WikipediaExtractor(BaseExtractor):
     def extract_title(self, page: BeautifulSoup) -> str:
         return page.title.text
 
-    def extract_content(self, page: BeautifulSoup) -> str:
+    def extract_content_items(self, page: BeautifulSoup) -> list[str]:
         content_items = []
 
         for item in page.find(id="mw-content-text").find_all("p"):
@@ -36,7 +36,7 @@ class WikipediaExtractor(BaseExtractor):
 
             content_items.append(item_text)
 
-        return " ".join(content_items)
+        return content_items
 
     def extract_urls(self, page: BeautifulSoup) -> set[str]:
         urls = set()
