@@ -24,15 +24,28 @@ class Index:
 
         self.content_items_collection = database.get_collection(f"{self.language}_content_items")
 
-    def find_pages(self, query: str, top_k: int = 5) -> CommandCursor:
+    def find_pages(self, query: str, top_k: int = 5, min_score: float = 0.75) -> CommandCursor:
         return self.content_items_collection.aggregate([
             {
                 "$vectorSearch": {
                     "index": "default",
                     "path": "embedding",
-                    "queryVector": self.model.encode(query).tolist(),
-                    "numCandidates": top_k * 10,
+                    "queryVector": self.model.encode(query.lower()).tolist(),
+                    "numCandidates": top_k * 100,
                     "limit": top_k
+                }
+            }, {
+                "$project": {
+                    "_id": 0,
+                    "page_id": 1,
+                    "content": 1,
+                    "score": {
+                        "$meta": "vectorSearchScore"
+                    }
+                }
+            }, {
+                "$match": {
+                    "score": {"$gte": min_score}
                 }
             }, {
                 "$group": {
@@ -70,7 +83,7 @@ class Index:
                 self.content_items_collection.insert_many([{
                     "page_id": inserted_page.inserted_id,
                     "content": content_item,
-                    "embedding": self.model.encode(content_item).tolist()
+                    "embedding": self.model.encode(content_item.lower()).tolist()
                 } for content_item in content_items])
 
             return True

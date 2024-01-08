@@ -26,7 +26,7 @@ class WikipediaExtractor(BaseExtractor):
         content_items = []
 
         for item in page.find(id="mw-content-text").find_all("p"):
-            item_text = sub(self.cite_pattern, "", item.get_text().replace("\n", ""))
+            item_text = sub(self.cite_pattern, "", item.get_text().replace("\n", "").strip())
 
             if not item_text or item_text.isspace():
                 continue
