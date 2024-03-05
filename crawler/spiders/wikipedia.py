@@ -55,16 +55,16 @@ class WikipediaSpider(Spider):
     def __extract_urls_to_crawl(self, response: Response) -> set[str]:
         response_url = urlparse(response.url)
 
-        urls_to_crawl = set()
+        urls = set()
 
         for url in response.css("div#mw-content-text a[href*='/wiki/']::attr(href)").getall():
             if url.startswith("/wiki/"):
                 url = f"{response_url.scheme}://{response_url.netloc}{url}"
 
             if urlparse(url).netloc == response_url.netloc:
-                urls_to_crawl.add(url)
+                urls.add(url)
 
-        return urls_to_crawl
+        return urls
 
     def __extract_content_items(self, response: Response) -> list[str]:
         content_items = []

@@ -36,6 +36,8 @@ class CrawlerPipeline:
                 "page_id": inserted_page.inserted_id,
                 "content": content_item
             } for content_item in item.content_items])
+
+            spider.logger.info(f"Inserted page {inserted_page.inserted_id} {item.title}")
         except PyMongoError as error:
             if not isinstance(error, DuplicateKeyError):
                 spider.logger.error(error)
