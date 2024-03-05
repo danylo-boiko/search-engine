@@ -1,1 +1,1 @@
-from .mongo import MongoPipeline
+from .indexer import IndexerPipeline

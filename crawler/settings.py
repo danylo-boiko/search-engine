@@ -23,7 +23,7 @@ SPIDER_MIDDLEWARES = {
 
 # Configure item pipelines
 ITEM_PIPELINES = {
-    "crawler.pipelines.MongoPipeline": 300,
+    "crawler.pipelines.IndexerPipeline": 300,
 }
 
 # Configure scheduler

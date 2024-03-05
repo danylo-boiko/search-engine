@@ -3,17 +3,19 @@ from uuid import uuid4
 
 from fastapi import APIRouter
 
-from api.schemas import SearchResult
-from common.settings import settings
+from api.models import SearchResult
+from common import settings
+from indexer import Indexer
 from localization import LanguageDetector
 from localization.enums import Language
 
 
 router = APIRouter()
 language_detector = LanguageDetector(settings.SUPPORTED_LANGUAGES)
+indexer = Indexer(settings.MONGO_CONNECTION_STRING, settings.MONGO_SEARCH_ENGINE_DB, settings.SUPPORTED_LANGUAGES)
 
 
-@router.get("/", response_model=SearchResult)
+@router.get("", response_model=SearchResult)
 def search(query: str, preferred_language: Language | None = None) -> SearchResult:
     start_time = time()
 
@@ -22,13 +24,15 @@ def search(query: str, preferred_language: Language | None = None) -> SearchResu
     if not language:
         language = preferred_language or settings.DEFAULT_LANGUAGE
 
+    pages = indexer.find_pages(query, language)
+
     end_time = time()
 
     return SearchResult(
-        id=str(uuid4()),
+        id=uuid4(),
         query=query,
-        summaries=[],
         language=language,
+        pages=pages,
         createdAt=end_time,
         timeTaken=end_time - start_time
     )
