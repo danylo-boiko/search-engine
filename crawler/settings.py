@@ -18,12 +18,12 @@ CONCURRENT_REQUESTS = 8
 
 # Enable or disable spider middlewares
 SPIDER_MIDDLEWARES = {
-    "crawler.middlewares.CrawlerSpiderMiddleware": 543,
+    "crawler.middlewares.FilterMiddleware": 543,
 }
 
 # Configure item pipelines
 ITEM_PIPELINES = {
-    "crawler.pipelines.CrawlerPipeline": 300,
+    "crawler.pipelines.MongoPipeline": 300,
 }
 
 # Configure scheduler

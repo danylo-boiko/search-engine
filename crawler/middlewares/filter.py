@@ -7,7 +7,7 @@ from crawler.settings import MIN_WORDS_PER_CONTENT_ITEM
 from crawler.items import CrawledItem
 
 
-class CrawlerSpiderMiddleware:
+class FilterMiddleware:
     def process_spider_output(self, response: Response, result: Iterator[CrawledItem | Request], spider: Spider) -> Iterator[CrawledItem | Request]:
         for item in result:
             if isinstance(item, CrawledItem):
