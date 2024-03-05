@@ -6,8 +6,8 @@ from scrapy import Spider, Request
 from scrapy.crawler import Crawler
 from scrapy.http import Response
 
-from common.settings import settings
-from crawler.items import CrawledItem
+from common import settings
+from indexer.models import CrawledPage
 from localization.enums import Language
 
 
@@ -35,8 +35,8 @@ class WikipediaSpider(Spider):
 
         self.allowed_domains = [self.queue]
 
-    def parse(self, response: Response, **kwargs: dict) -> Iterable[CrawledItem | Request]:
-        yield CrawledItem(
+    def parse(self, response: Response, **kwargs: dict) -> Iterable[CrawledPage | Request]:
+        yield CrawledPage(
             title=self.__extract_title(response),
             url=response.url,
             content_items=self.__extract_content_items(response)
