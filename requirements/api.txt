@@ -1,0 +1,5 @@
+pydantic
+starlette
+fastapi
+uvicorn
+lingua-language-detector

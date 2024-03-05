@@ -3,7 +3,7 @@ from typing import Iterator
 from scrapy import Spider, Request
 from scrapy.http import Response
 
-from common.settings import settings
+from crawler.settings import MIN_WORDS_PER_CONTENT_ITEM
 from crawler.items import CrawledItem
 
 
@@ -13,7 +13,7 @@ class CrawlerSpiderMiddleware:
             if isinstance(item, CrawledItem):
                 item.content_items = [
                     content_item for content_item in item.content_items
-                    if len(content_item.split()) >= settings.MIN_WORDS_PER_CONTENT_ITEM
+                    if len(content_item.split()) >= MIN_WORDS_PER_CONTENT_ITEM
                 ]
 
                 if item.content_items:
