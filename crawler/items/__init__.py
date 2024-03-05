@@ -1,0 +1,1 @@
+from .crawled import CrawledItem

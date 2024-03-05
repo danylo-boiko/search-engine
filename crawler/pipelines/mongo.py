@@ -8,7 +8,7 @@ from common.settings import settings
 from crawler.items import CrawledItem
 
 
-class CrawlerPipeline:
+class MongoPipeline:
     def open_spider(self, spider: Spider) -> None:
         self.client = MongoClient(settings.MONGO_CONNECTION_STRING)
         self.database = self.client.get_database(settings.MONGO_SEARCH_ENGINE_DB)

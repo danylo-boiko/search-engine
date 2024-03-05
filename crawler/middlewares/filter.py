@@ -3,17 +3,17 @@ from typing import Iterator
 from scrapy import Spider, Request
 from scrapy.http import Response
 
-from common.settings import settings
+from crawler.settings import MIN_WORDS_PER_CONTENT_ITEM
 from crawler.items import CrawledItem
 
 
-class CrawlerSpiderMiddleware:
+class FilterMiddleware:
     def process_spider_output(self, response: Response, result: Iterator[CrawledItem | Request], spider: Spider) -> Iterator[CrawledItem | Request]:
         for item in result:
             if isinstance(item, CrawledItem):
                 item.content_items = [
                     content_item for content_item in item.content_items
-                    if len(content_item.split()) >= settings.MIN_WORDS_PER_CONTENT_ITEM
+                    if len(content_item.split()) >= MIN_WORDS_PER_CONTENT_ITEM
                 ]
 
                 if item.content_items:
