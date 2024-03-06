@@ -52,6 +52,24 @@ class WikipediaSpider(Spider):
     def __extract_title(self, response: Response) -> str:
         return response.css("title::text").get()
 
+    def __extract_content_items(self, response: Response) -> list[str]:
+        content_items = []
+
+        for paragraph in response.css("div#mw-content-text p"):
+            paragraph_items = [item for item in paragraph.css("::text").extract() if not compile(r"\[\d+]").match(item)]
+
+            paragraph_content = "".join(paragraph_items).replace("\n", "").strip()
+
+            if not paragraph_content or paragraph_content[-1] == ":":
+                continue
+
+            if not paragraph_content.endswith("."):
+                paragraph_content += "."
+
+            content_items.append(paragraph_content)
+
+        return content_items
+
     def __extract_urls_to_crawl(self, response: Response) -> set[str]:
         response_url = urlparse(response.url)
 
@@ -65,21 +83,3 @@ class WikipediaSpider(Spider):
                 urls.add(url)
 
         return urls
-
-    def __extract_content_items(self, response: Response) -> list[str]:
-        content_items = []
-
-        for paragraph in response.css("div#mw-content-text p"):
-            paragraph_items = [item for item in paragraph.css("::text").extract() if not compile(r"\[\d+]").match(item)]
-
-            paragraph_content = "".join(paragraph_items).replace("\n", "").strip()
-
-            if not paragraph_content:
-                continue
-
-            if not paragraph_content.endswith("."):
-                paragraph_content += "."
-
-            content_items.append(paragraph_content)
-
-        return content_items

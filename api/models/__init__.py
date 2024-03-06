@@ -1,1 +1,1 @@
-from .search_result import SearchResult, PageSummary
+from .search_result import SearchResult
