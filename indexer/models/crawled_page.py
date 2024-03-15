@@ -8,6 +8,7 @@ class CrawledPage:
     url: str
     content_items: list[str]
 
-    def get_content_items_hash(self) -> str:
+    @property
+    def content_items_hash(self) -> str:
         content = "".join(self.content_items).encode()
         return md5(content).hexdigest()

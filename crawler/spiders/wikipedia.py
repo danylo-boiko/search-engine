@@ -8,7 +8,7 @@ from scrapy.http import Response
 
 from common import settings
 from indexer.models import CrawledPage
-from localization.enums import Language
+from common.enums import Language
 
 
 class WikipediaSpider(Spider):

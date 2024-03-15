@@ -5,19 +5,20 @@ from time import time
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError, DuplicateKeyError
 
+from common import settings
 from indexer.models import CrawledPage, PageSummary
-from localization.enums import Language
+from common.enums import Language
 
 
 class Indexer:
-    def __init__(self, connection_string: str, search_engine_db: str, supported_languages: list[Language]) -> None:
-        self.client = MongoClient(connection_string)
-        self.database = self.client.get_database(search_engine_db)
+    def __init__(self) -> None:
+        self.client = MongoClient(settings.MONGO_CONNECTION_STRING)
+        self.database = self.client.get_database(settings.MONGO_SEARCH_ENGINE_DB)
 
         self.pages_collections = {}
         self.content_items_collections = {}
 
-        for language in supported_languages:
+        for language in settings.SUPPORTED_LANGUAGES:
             self.pages_collections[language] = self.database.get_collection(f"{language}_pages")
             self.pages_collections[language].create_index("content_hash", unique=True)
 
@@ -34,7 +35,7 @@ class Indexer:
             inserted_page = self.pages_collections[language].insert_one({
                 "title": page.title,
                 "url": page.url,
-                "content_hash": page.get_content_items_hash(),
+                "content_hash": page.content_items_hash,
                 "created_at": time()
             })
 

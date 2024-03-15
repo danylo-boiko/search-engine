@@ -3,16 +3,16 @@ from uuid import uuid4
 
 from fastapi import APIRouter
 
+from api.localization import LanguageDetector
 from api.models import SearchResult
 from common import settings
 from indexer import Indexer
-from localization import LanguageDetector
-from localization.enums import Language
+from common.enums import Language
 
 
 router = APIRouter()
-language_detector = LanguageDetector(settings.SUPPORTED_LANGUAGES)
-indexer = Indexer(settings.MONGO_CONNECTION_STRING, settings.MONGO_SEARCH_ENGINE_DB, settings.SUPPORTED_LANGUAGES)
+language_detector = LanguageDetector()
+indexer = Indexer()
 
 
 @router.get("", response_model=SearchResult)
