@@ -10,7 +10,7 @@ LOG_LEVEL = "INFO"
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
-# Configure the minimum word count per content item
+# Configure the minimum words count per content item
 MIN_WORDS_PER_CONTENT_ITEM = 8
 
 # Configure the maximum concurrent requests performed by Scrapy (default: 16)

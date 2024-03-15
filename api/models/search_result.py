@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from indexer.models import PageSummary
-from localization.enums import Language
+from common.enums import Language
 
 
 @dataclass
