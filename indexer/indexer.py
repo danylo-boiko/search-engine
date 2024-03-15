@@ -4,6 +4,7 @@ from time import time
 
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError, DuplicateKeyError
+from sentence_transformers import SentenceTransformer
 
 from common import settings
 from indexer.models import CrawledPage, PageSummary
@@ -23,6 +24,8 @@ class Indexer:
             self.pages_collections[language].create_index("content_hash", unique=True)
 
             self.content_items_collections[language] = self.database.get_collection(f"{language}_content_items")
+
+        self.embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL_NAME)
 
     def __del__(self) -> None:
         self.client.close()
