@@ -1,3 +1,4 @@
 pymongo
 pydantic-settings
 lingua-language-detector
+sentence-transformers
