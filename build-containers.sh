@@ -1,0 +1,1 @@
+docker build -t search-engine-api -f Dockerfile.api .

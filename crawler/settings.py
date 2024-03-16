@@ -1,4 +1,4 @@
-BOT_NAME = "search engine crawler"
+BOT_NAME = "search-engine-crawler"
 
 # Configure the spider modules
 SPIDER_MODULES = ["crawler.spiders"]
