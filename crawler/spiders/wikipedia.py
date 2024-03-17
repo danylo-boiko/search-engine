@@ -60,7 +60,7 @@ class WikipediaSpider(Spider):
 
             paragraph_content = "".join(paragraph_items).replace("\n", "").strip()
 
-            if not paragraph_content or paragraph_content[-1] == ":":
+            if not paragraph_content:
                 continue
 
             if not paragraph_content.endswith("."):
