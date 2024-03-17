@@ -40,9 +40,7 @@ class MongoRepository:
                     "_id": 0,
                     "page_id": 1,
                     "content": 1,
-                    "score": {
-                        "$meta": "vectorSearchScore"
-                    }
+                    "score": {"$meta": "vectorSearchScore"}
                 }
             }, {
                 "$match": {

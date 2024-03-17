@@ -12,5 +12,5 @@ class IndexerPipeline:
         del self.indexer
 
     def process_item(self, page: CrawledPage, spider: Spider) -> CrawledPage:
-        self.indexer.add_page(page, getattr(spider, "language"))
+        self.indexer.add_page(getattr(spider, "language"), page)
         return page

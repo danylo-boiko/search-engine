@@ -4,8 +4,8 @@ from time import time
 from sentence_transformers import SentenceTransformer
 
 from common import settings
-from indexer.models import CrawledPage, PageSummary
 from common.enums import Language
+from indexer.models import CrawledPage, PageSummary
 from indexer.repositories import MongoRepository
 
 
@@ -17,14 +17,14 @@ class Indexer:
     def __del__(self) -> None:
         del self.repository
 
-    def find_pages(self, query: str, language: Language) -> list[PageSummary]:
+    def find_pages(self, language: Language, query: str) -> list[PageSummary]:
         return [PageSummary(
             title=page["title"],
             url=page["url"],
             summary=" ".join(page["content_items"])
         ) for page in self.repository.find_by_content_embedding(language, self.__get_embedding(query))]
 
-    def add_page(self, page: CrawledPage, language: Language) -> None:
+    def add_page(self, language: Language, page: CrawledPage) -> None:
         page_id = self.repository.add_page(language, {
             "title": page.title,
             "url": page.url,
