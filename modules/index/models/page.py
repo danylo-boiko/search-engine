@@ -1,13 +1,10 @@
-from time import time
+from datetime import datetime
 
-from mongoengine import Document, StringField, EnumField, FloatField
-
-from modules.common.enums import Language
+from mongoengine import Document, StringField, DateTimeField
 
 
 class Page(Document):
     title = StringField(required=True)
     url = StringField(required=True)
-    language = EnumField(Language, required=True)
     content_hash = StringField(required=True, unique=True)
-    created_at = FloatField(default=time)
+    created_at = DateTimeField(default=datetime.utcnow)

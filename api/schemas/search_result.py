@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -11,5 +12,5 @@ class SearchResult(BaseModel):
     query: str
     language: Language
     pages: list[PageSummary]
-    createdAt: float
-    timeTaken: float
+    createdAt: datetime
+    timeTaken: int
