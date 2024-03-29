@@ -1,4 +1,4 @@
-from time import time
+from datetime import datetime
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends
@@ -17,17 +17,17 @@ def search(
     query: str = Depends(query_validator),
     language_detection_service: LanguageDetectionService = Depends(get_language_detection_service)
 ) -> SearchResult:
-    start_time = time()
+    start_time = datetime.utcnow()
 
     language = language_detection_service.detect(query)
 
-    end_time = time()
+    end_time = datetime.utcnow()
 
     return SearchResult(
         id=uuid4(),
         query=query,
         language=language,
         pages=[],
-        createdAt=end_time,
-        timeTaken=end_time - start_time
+        createdAt=end_time.timestamp(),
+        timeTaken=end_time.timestamp() - start_time.timestamp()
     )
