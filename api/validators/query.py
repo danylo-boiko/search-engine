@@ -1,15 +1,11 @@
 from fastapi import HTTPException
 
 from api.settings import settings
-
-
-punctuation_marks = set("!\"#$%&()*+,/:;<=>?@[\\]^_`{|}~.")
+from modules.common.utils import remove_punctuation_marks
 
 
 def query_validator(query: str) -> str:
-    filtered_query = "".join([char for char in query if char not in punctuation_marks])
-
-    unique_words = set([word for word in filtered_query.split() if word.isalpha()])
+    unique_words = set([word for word in remove_punctuation_marks(query).split() if word.isalpha()])
 
     if len(unique_words) < settings.MIN_UNIQUE_WORDS_COUNT_IN_QUERY:
         raise HTTPException(

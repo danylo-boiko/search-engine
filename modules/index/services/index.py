@@ -6,16 +6,20 @@ from modules.index.repositories import PageRepository, ContentItemRepository
 
 class IndexService:
     def __init__(self) -> None:
-        self.page_repository = PageRepository()
-        self.content_item_repository = ContentItemRepository()
+        self._page_repository = PageRepository()
+        self._content_item_repository = ContentItemRepository()
 
     def index_crawled_page(self, title: str, url: str, language: Language, content_items: list[str]) -> None:
-        content_hash = md5("".join(content_items).encode()).hexdigest()
-
-        created_page = self.page_repository.create_page(title, url, language, content_hash)
+        created_page = self._page_repository.create_page(title, url, language, self._get_content_hash(content_items))
 
         if not created_page:
             return
 
-        for content_item in content_items:
-            self.content_item_repository.create_content_item(created_page, content_item)
+        self._content_item_repository.create_content_items(created_page, content_items)
+
+    def find_indexed_pages(self, query: str, language: Language) -> list:
+        return []
+
+    def _get_content_hash(self, content_items: list[str]) -> str:
+        encoded_content = "".join(content_items).encode()
+        return md5(encoded_content).hexdigest()

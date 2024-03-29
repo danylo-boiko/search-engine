@@ -10,8 +10,21 @@ LOG_LEVEL = "INFO"
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
+# Configure the minimum words count per content item
+MIN_WORDS_IN_CONTENT_ITEM = 10
+
 # Configure the maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 8
+
+# Configure middlewares
+SPIDER_MIDDLEWARES = {
+    "src.middlewares.FilterMiddleware": 543
+}
+
+# Configure pipelines
+ITEM_PIPELINES = {
+    "src.pipelines.IndexPipeline": 300
+}
 
 # Configure scheduler
 SCHEDULER_DISK_QUEUE = "scrapy.squeues.PickleFifoDiskQueue"

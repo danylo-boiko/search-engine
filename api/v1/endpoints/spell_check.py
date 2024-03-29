@@ -21,5 +21,5 @@ def spell_check(
 
     return SpellCheckResult(
         is_valid=query == autocorrected_query,
-        fixed_query=autocorrected_query if autocorrected_query != query else None
+        autocorrected_query=autocorrected_query if query != autocorrected_query else None
     )

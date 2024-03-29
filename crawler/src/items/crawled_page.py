@@ -1,7 +1,11 @@
-from scrapy import Item
+from dataclasses import dataclass
+
+from modules.common.enums import Language
 
 
-class CrawledPage(Item):
+@dataclass
+class CrawledPage:
     title: str
     url: str
+    language: Language
     content_items: list[str]
