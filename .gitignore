@@ -4,5 +4,8 @@ __pycache__/
 # IDE
 .idea/
 
+# Environments
+.env
+
 # Crawler data
 crawler/jobs/

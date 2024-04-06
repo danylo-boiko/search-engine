@@ -8,7 +8,7 @@ from index.services import IndexService
 
 class IndexPipeline:
     def __init__(self) -> None:
-        connect(settings.MONGO_DB_NAME, host=settings.MONGO_CONNECTION_STRING)
+        connect(settings.DB_NAME, host=settings.DB_CONNECTION_STRING)
         self.index_service = IndexService()
 
     def __del__(self) -> None:

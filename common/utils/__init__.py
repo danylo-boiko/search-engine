@@ -1,1 +1,1 @@
-from .filter import remove_punctuation_marks
+from .string import remove_punctuation

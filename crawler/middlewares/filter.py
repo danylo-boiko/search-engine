@@ -5,7 +5,7 @@ from scrapy.http import Response
 
 from crawler.items import CrawledPage
 from crawler.settings import MIN_WORDS_IN_CONTENT_ITEM
-from common.utils import remove_punctuation_marks
+from common.utils import remove_punctuation
 
 
 class FilterMiddleware:
@@ -27,7 +27,7 @@ class FilterMiddleware:
         filtered_content_items = []
 
         for content_item in content_items:
-            words = [word for word in remove_punctuation_marks(content_item).split() if word.isalpha()]
+            words = [word for word in remove_punctuation(content_item).split() if word.isalpha()]
 
             if len(words) >= MIN_WORDS_IN_CONTENT_ITEM:
                 filtered_content_items.append(content_item)

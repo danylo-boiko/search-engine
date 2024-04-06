@@ -9,7 +9,7 @@ from common import settings as common_settings
 
 app = FastAPI(
     title=settings.PROJECT_TITLE,
-    on_startup=[lambda: connect(common_settings.MONGO_DB_NAME, host=common_settings.MONGO_CONNECTION_STRING)],
+    on_startup=[lambda: connect(common_settings.DB_NAME, host=common_settings.DB_CONNECTION_STRING)],
     on_shutdown=[disconnect]
 )
 

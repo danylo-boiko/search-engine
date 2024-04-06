@@ -4,10 +4,9 @@ from common.enums import Language
 
 
 class Settings(BaseSettings):
-    DEFAULT_LANGUAGE: Language = Language.ENGLISH
     SUPPORTED_LANGUAGES: set[Language] = {Language.ENGLISH, Language.UKRAINIAN}
-    MONGO_DB_NAME: str = "search-engine"
-    MONGO_CONNECTION_STRING: str
+    DB_NAME: str
+    DB_CONNECTION_STRING: str
 
 
-settings = Settings()
+settings = Settings(_env_file=".env")
