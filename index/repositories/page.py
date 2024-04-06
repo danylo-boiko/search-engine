@@ -1,7 +1,6 @@
 from mongoengine import NotUniqueError
 
-from modules.common.enums import Language
-from modules.index.models import Page
+from index.models import Page
 
 
 class PageRepository:

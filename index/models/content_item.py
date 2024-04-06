@@ -1,6 +1,6 @@
 from mongoengine import Document, StringField, ReferenceField
 
-from modules.index.models.page import Page
+from index.models.page import Page
 
 
 class ContentItem(Document):

@@ -1,4 +1,4 @@
-from modules.index.models import Page, ContentItem
+from index.models import Page, ContentItem
 
 
 class ContentItemRepository:

@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 
 from api.settings import settings
-from modules.common.utils import remove_punctuation_marks
+from common.utils import remove_punctuation_marks
 
 
 def query_validator(query: str) -> str:

@@ -4,7 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 from api.schemas import PageSummary
-from modules.common.enums import Language
+from common.enums import Language
 
 
 class SearchResult(BaseModel):

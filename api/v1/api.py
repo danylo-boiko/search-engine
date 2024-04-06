@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from api.v1.endpoints import search, spell_check
+from api.v1.routers import search, spell_check
 
 
 api_router = APIRouter()

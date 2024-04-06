@@ -6,10 +6,10 @@ from scrapy import Spider, Request
 from scrapy.crawler import Crawler
 from scrapy.http import Response
 
-from crawler.src.items import CrawledPage
-from crawler.src.utils import get_page_title, get_page_urls
-from modules.common import settings
-from modules.common.enums import Language
+from crawler.items import CrawledPage
+from crawler.utils import get_page_title, get_page_urls
+from common import settings
+from common.enums import Language
 
 
 class WikipediaSpider(Spider):
@@ -49,7 +49,7 @@ class WikipediaSpider(Spider):
 
     def _set_crawler(self, crawler: Crawler) -> None:
         super()._set_crawler(crawler)
-        self.crawler.settings.set("JOBDIR", f"jobs/{self.queue}")
+        self.crawler.settings.set("JOBDIR", f"crawler/jobs/{self.queue}")
 
     def __parse_content_items(self, response: Response) -> list[str]:
         content_items = []

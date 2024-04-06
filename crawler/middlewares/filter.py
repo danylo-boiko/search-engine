@@ -3,9 +3,9 @@ from typing import Iterator
 from scrapy import Request, Spider
 from scrapy.http import Response
 
-from crawler.src.items import CrawledPage
-from crawler.src.settings import MIN_WORDS_IN_CONTENT_ITEM
-from modules.common.utils import remove_punctuation_marks
+from crawler.items import CrawledPage
+from crawler.settings import MIN_WORDS_IN_CONTENT_ITEM
+from common.utils import remove_punctuation_marks
 
 
 class FilterMiddleware:

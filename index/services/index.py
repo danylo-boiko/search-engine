@@ -1,8 +1,8 @@
 import logging
 from hashlib import md5
 
-from modules.common.enums import Language
-from modules.index.repositories import PageRepository, ContentItemRepository
+from common.enums import Language
+from index.repositories import PageRepository, ContentItemRepository
 
 
 class IndexService:

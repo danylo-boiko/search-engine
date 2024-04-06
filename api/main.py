@@ -4,7 +4,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from api.settings import settings
 from api.v1 import api_router
-from modules.common import settings as common_settings
+from common import settings as common_settings
 
 
 app = FastAPI(

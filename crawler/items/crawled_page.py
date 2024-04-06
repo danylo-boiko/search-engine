@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from modules.common.enums import Language
+from common.enums import Language
 
 
 @dataclass

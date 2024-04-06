@@ -1,9 +1,9 @@
 from mongoengine import connect, disconnect
 from scrapy import Spider
 
-from crawler.src.items import CrawledPage
-from modules.common import settings
-from modules.index.services import IndexService
+from crawler.items import CrawledPage
+from common import settings
+from index.services import IndexService
 
 
 class IndexPipeline:

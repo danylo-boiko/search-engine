@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 
-from modules.common.enums import Language
+from common.enums import Language
 
 
 class Settings(BaseSettings):

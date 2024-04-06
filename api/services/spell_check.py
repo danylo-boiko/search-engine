@@ -1,7 +1,7 @@
 from autocorrect import Speller
 
-from modules.common import settings
-from modules.common.enums import Language
+from common import settings
+from common.enums import Language
 
 
 class SpellCheckService:

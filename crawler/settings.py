@@ -1,8 +1,8 @@
 BOT_NAME = "search-engine-crawler"
 
 # Configure the spider modules
-SPIDER_MODULES = ["src.spiders"]
-NEWSPIDER_MODULE = "src.spiders"
+SPIDER_MODULES = ["crawler.spiders"]
+NEWSPIDER_MODULE = "crawler.spiders"
 
 # Configure logger
 LOG_LEVEL = "INFO"
@@ -18,12 +18,12 @@ CONCURRENT_REQUESTS = 8
 
 # Configure middlewares
 SPIDER_MIDDLEWARES = {
-    "src.middlewares.FilterMiddleware": 543
+    "crawler.middlewares.FilterMiddleware": 543
 }
 
 # Configure pipelines
 ITEM_PIPELINES = {
-    "src.pipelines.IndexPipeline": 300
+    "crawler.pipelines.IndexPipeline": 300
 }
 
 # Configure scheduler

@@ -1,7 +1,7 @@
 from lingua import LanguageDetectorBuilder
 
-from modules.common.enums import Language
-from modules.common import settings
+from common.enums import Language
+from common import settings
 
 
 class LanguageDetectionService:
