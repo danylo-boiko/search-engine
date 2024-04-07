@@ -16,11 +16,6 @@ MIN_WORDS_IN_CONTENT_ITEM = 10
 # Configure the maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 8
 
-# Configure middlewares
-SPIDER_MIDDLEWARES = {
-    "crawler.middlewares.FilterMiddleware": 543
-}
-
 # Configure pipelines
 ITEM_PIPELINES = {
     "crawler.pipelines.IndexPipeline": 300

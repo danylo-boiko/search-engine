@@ -1,70 +1,82 @@
-from re import compile
+from re import sub
 from typing import Iterable
 from urllib.parse import urlparse
 
-from scrapy import Spider, Request
-from scrapy.crawler import Crawler
+from scrapy import Request
 from scrapy.http import Response
 
-from crawler.items import CrawledPage
-from crawler.utils import get_page_title, get_page_urls
-from common import settings
 from common.enums import Language
+from crawler.items import CrawledPage
+from crawler.spiders.base import BaseSpider
 
 
-class WikipediaSpider(Spider):
+class WikipediaSpider(BaseSpider):
     name = "wikipedia"
 
     def __init__(self, **kwargs: dict[str, str]) -> None:
-        super().__init__(self.name)
-
-        start_url, queue = kwargs.get("start_url"), kwargs.get("queue")
-
-        if not start_url and not queue:
-            raise RuntimeError("You must specify either 'start_url' or 'queue'")
-
-        if isinstance(start_url, str):
-            self.start_urls = [start_url]
-            self.queue = urlparse(start_url).netloc
-        else:
-            self.queue = queue
+        super().__init__(self.name, **kwargs)
 
         self.language = Language(self.queue[:2])
 
-        if self.language not in settings.SUPPORTED_LANGUAGES:
-            raise ValueError(f"Language {self.language} is not supported")
-
-        self.allowed_domains = [self.queue]
+        self.sub_paths_to_ignore = {
+            Language.ENGLISH: ["wikipedia", "category", "help", "list", "file"],
+            Language.UKRAINIAN: ["вікіпедія", "категорія", "довідка", "список", "файл"]
+        }
 
     def parse(self, response: Response, **kwargs: dict) -> Iterable[CrawledPage | Request]:
+        for url in self._get_urls(response):
+            yield Request(url, self.parse)
+
+        if self.__has_to_be_ignored(response.url):
+            return
+
         yield CrawledPage(
-            title=get_page_title(response),
+            title=self._get_title(response),
             url=response.url,
-            language=self.language,
             content_items=self.__parse_content_items(response)
         )
 
-        for url in get_page_urls(response):
-            yield Request(url, self.parse)
+    def __has_to_be_ignored(self, url: str) -> bool:
+        path = urlparse(url).path.lower()
 
-    def _set_crawler(self, crawler: Crawler) -> None:
-        super()._set_crawler(crawler)
-        self.crawler.settings.set("JOBDIR", f"crawler/jobs/{self.queue}")
+        for sub_path in self.sub_paths_to_ignore[self.language]:
+            if path.startswith(f"/wiki/{sub_path}:"):
+                return True
+
+        return False
 
     def __parse_content_items(self, response: Response) -> list[str]:
         content_items = []
 
-        for paragraph in response.css("div#mw-content-text p"):
-            paragraph_items = [item for item in paragraph.css("::text").extract() if not compile(r"\[\d+]").match(item)]
+        for paragraph in response.css("div#mw-content-text p:not(:has(table)):not(:has(ul)):not(:has(ol))"):
+            paragraph_content = "".join(item for item in paragraph.css("::text").extract())
 
-            paragraph_content = "".join(paragraph_items).replace("\n", "").strip()
-
-            if not paragraph_content or paragraph_content[-1] == ":":
-                continue
+            paragraph_content = self.__clean_paragraph_content(paragraph_content)
 
             if not paragraph_content.endswith("."):
                 paragraph_content += "."
 
+            if self.__is_list_header(paragraph_content) or not self._has_required_words_count(paragraph_content):
+                continue
+
             content_items.append(paragraph_content)
 
         return content_items
+
+    def __clean_paragraph_content(self, content: str) -> str:
+        # remove cites
+        content = sub(r"\[[^]]*]", "", content)
+
+        # remove breaks
+        content = content.replace("\n", "")
+
+        # remove consecutive dots
+        content = sub(r"\.{2,}", "", content)
+
+        # remove consecutive spaces
+        content = sub(r"\s{2,}", " ", content)
+
+        return content.strip()
+
+    def __is_list_header(self, text: str) -> bool:
+        return text.endswith(":")
