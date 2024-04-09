@@ -1,3 +1,2 @@
-from .page_summary import PageSummary
-from .search_result import SearchResult
-from .spell_check_result import SpellCheckResult
+from .search_response import SearchResponse, PageSummary
+from .spell_check_response import SpellCheckResponse

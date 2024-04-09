@@ -3,11 +3,16 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from api.schemas import PageSummary
 from common.enums import Language
 
 
-class SearchResult(BaseModel):
+class PageSummary(BaseModel):
+    title: str
+    url: str
+    summary: str
+
+
+class SearchResponse(BaseModel):
     id: UUID
     query: str
     language: Language

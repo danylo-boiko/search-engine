@@ -18,7 +18,7 @@ class WikipediaSpider(BaseSpider):
 
         self.language = Language(self.queue[:2])
 
-        self.sub_paths_to_ignore = {
+        self.sub_paths_to_ignore_content = {
             Language.ENGLISH: ["wikipedia", "category", "help", "list", "file"],
             Language.UKRAINIAN: ["вікіпедія", "категорія", "довідка", "список", "файл"]
         }
@@ -27,7 +27,7 @@ class WikipediaSpider(BaseSpider):
         for url in self._get_urls(response):
             yield Request(url, self.parse)
 
-        if self.__has_to_be_ignored(response.url):
+        if self.__content_has_to_be_ignored(response.url):
             return
 
         yield CrawledPage(
@@ -36,10 +36,10 @@ class WikipediaSpider(BaseSpider):
             content_items=self.__parse_content_items(response)
         )
 
-    def __has_to_be_ignored(self, url: str) -> bool:
+    def __content_has_to_be_ignored(self, url: str) -> bool:
         path = urlparse(url).path.lower()
 
-        for sub_path in self.sub_paths_to_ignore[self.language]:
+        for sub_path in self.sub_paths_to_ignore_content[self.language]:
             if path.startswith(f"/wiki/{sub_path}:"):
                 return True
 

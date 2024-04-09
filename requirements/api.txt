@@ -1,3 +1,5 @@
+babel
+geocoder
 fastapi
 uvicorn
 autocorrect

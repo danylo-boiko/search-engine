@@ -8,7 +8,7 @@ from index.services import IndexService
 
 class IndexPipeline:
     def __init__(self) -> None:
-        connect(settings.DB_NAME, host=settings.DB_CONNECTION_STRING)
+        connect(settings.db_name, host=settings.db_connection_string)
         self.index_service = IndexService()
 
     def __del__(self) -> None:

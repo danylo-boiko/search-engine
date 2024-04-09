@@ -1,25 +1,31 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Request
 
-from api.schemas import SpellCheckResult
-from api.services import LanguageDetectionService, SpellCheckService
-from api.v1.dependencies import get_spell_check_service, get_language_detection_service
+from api.schemas import SpellCheckResponse
+from api.services import SpellCheckService, LanguageDetectionService
+from api.v1.dependencies import get_language_detection_service, get_spell_check_service
 from api.validators import query_validator
+from common import settings
+from common.enums import Language
 
 
 router = APIRouter()
 
 
-@router.get("", response_model=SpellCheckResult)
+@router.get("", response_model=SpellCheckResponse)
 def spell_check(
+    request: Request,
     query: str = Depends(query_validator),
     language_detection_service: LanguageDetectionService = Depends(get_language_detection_service),
     spell_check_service: SpellCheckService = Depends(get_spell_check_service)
-) -> SpellCheckResult:
-    detected_language = language_detection_service.detect(query)
+) -> SpellCheckResponse:
+    language = language_detection_service.detect(query, request.client.host)
 
-    autocorrected_query = spell_check_service.autocorrect(query, detected_language)
+    if language not in settings.supported_languages_lingua:
+        raise HTTPException(status_code=400, detail=f"{language.name.capitalize()} language is not supported")
 
-    return SpellCheckResult(
-        is_valid=query == autocorrected_query,
-        autocorrected_query=autocorrected_query if query != autocorrected_query else None
-    )
+    autocorrected_query = spell_check_service.autocorrect(query, Language.from_lingua_language(language))
+
+    if query == autocorrected_query:
+        return SpellCheckResponse(is_valid=True)
+
+    return SpellCheckResponse(is_valid=False, autocorrected_query=autocorrected_query)
