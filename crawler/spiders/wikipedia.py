@@ -27,16 +27,16 @@ class WikipediaSpider(BaseSpider):
         for url in self._get_urls(response):
             yield Request(url, self.parse)
 
-        if self.__content_has_to_be_ignored(response.url):
+        if self._content_has_to_be_ignored(response.url):
             return
 
         yield CrawledPage(
             title=self._get_title(response),
             url=response.url,
-            content_items=self.__parse_content_items(response)
+            content_items=self._parse_content_items(response)
         )
 
-    def __content_has_to_be_ignored(self, url: str) -> bool:
+    def _content_has_to_be_ignored(self, url: str) -> bool:
         path = urlparse(url).path.lower()
 
         for sub_path in self.sub_paths_to_ignore_content[self.language]:
@@ -45,25 +45,25 @@ class WikipediaSpider(BaseSpider):
 
         return False
 
-    def __parse_content_items(self, response: Response) -> list[str]:
-        content_items = []
+    def _parse_content_items(self, response: Response) -> list[str]:
+        content_items = list()
 
         for paragraph in response.css("div#mw-content-text p:not(:has(table)):not(:has(ul)):not(:has(ol))"):
             paragraph_content = "".join(item for item in paragraph.css("::text").extract())
 
-            paragraph_content = self.__clean_paragraph_content(paragraph_content)
+            paragraph_content = self._clean_paragraph_content(paragraph_content)
+
+            if not self._has_required_words_count(paragraph_content) or self._is_list_header(paragraph_content):
+                continue
 
             if not paragraph_content.endswith("."):
                 paragraph_content += "."
-
-            if self.__is_list_header(paragraph_content) or not self._has_required_words_count(paragraph_content):
-                continue
 
             content_items.append(paragraph_content)
 
         return content_items
 
-    def __clean_paragraph_content(self, content: str) -> str:
+    def _clean_paragraph_content(self, content: str) -> str:
         # remove cites
         content = sub(r"\[[^]]*]", "", content)
 
@@ -78,5 +78,5 @@ class WikipediaSpider(BaseSpider):
 
         return content.strip()
 
-    def __is_list_header(self, text: str) -> bool:
+    def _is_list_header(self, text: str) -> bool:
         return text.endswith(":")

@@ -32,16 +32,12 @@ class PageBuilder:
         if not self._content_items:
             raise ValueError("Content items are required")
 
-        page = Page(
+        return Page(
             title=self._title,
             url=self._url,
             content_hash=self._compute_content_hash(),
             created_at=datetime.utcnow()
         )
-
-        page.validate()
-
-        return page
 
     def _compute_content_hash(self) -> str:
         encoded_content = "".join(self._content_items).encode()

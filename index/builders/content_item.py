@@ -7,6 +7,7 @@ class ContentItemBuilder:
         self._page = None
         self._content = None
         self._language = None
+        self._embedding = None
 
     def with_page(self, page: Page) -> "ContentItemBuilder":
         self._page = page
@@ -20,6 +21,10 @@ class ContentItemBuilder:
         self._language = language
         return self
 
+    def with_embedding(self, embedding: list[float]) -> "ContentItemBuilder":
+        self._embedding = embedding
+        return self
+
     def build(self) -> ContentItem:
         if not self._page:
             raise ValueError("Page is required")
@@ -30,12 +35,12 @@ class ContentItemBuilder:
         if not self._language:
             raise ValueError("Language is required")
 
-        content_item = ContentItem(
+        if not self._embedding:
+            raise ValueError("Embedding is required")
+
+        return ContentItem(
             page=self._page,
             content=self._content,
-            language=self._language
+            language=self._language,
+            embedding=self._embedding
         )
-
-        content_item.validate()
-
-        return content_item

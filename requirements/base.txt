@@ -1,3 +1,4 @@
 mongoengine
 pydantic-settings
 lingua-language-detector
+sentence-transformers
