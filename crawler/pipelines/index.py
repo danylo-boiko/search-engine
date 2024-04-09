@@ -15,5 +15,5 @@ class IndexPipeline:
         disconnect()
 
     def process_item(self, page: CrawledPage, _: Spider) -> CrawledPage:
-        self.index_service.index_crawled_page(page.title, page.url, page.content_items)
+        self.index_service.index_page(page.title, page.url, page.content_items)
         return page

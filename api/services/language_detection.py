@@ -19,13 +19,12 @@ class LanguageDetectionService:
 
         for language_confidence in self._lingua_detector.compute_language_confidence_values(text):
             language_info = territory_language_info.get(language_confidence.language.iso_code_639_1.name.lower())
+
             confidence = language_confidence.value
 
             if language_info:
                 if language_info["official_status"] == "official":
-                    confidence *= 1.25
-                elif language_info["official_status"] == "de_facto_official":
-                    confidence *= 1.1
+                    confidence *= 1.2
 
                 confidence *= 1 + (language_info["population_percent"] * 0.0025)
 

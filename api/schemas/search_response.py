@@ -17,5 +17,5 @@ class SearchResponse(BaseModel):
     query: str
     language: Language
     pages: list[PageSummary]
-    createdAt: datetime
-    timeTaken: int
+    created_at: datetime
+    time_taken: int

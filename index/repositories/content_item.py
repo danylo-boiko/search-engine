@@ -1,8 +1,16 @@
-from index.models import Page, ContentItem
+from itertools import groupby
+
+from mongoengine import get_db
+
+from index.builders import ContentItemBuilder
 
 
 class ContentItemRepository:
-    def create_content_items(self, page: Page, content_items: list[str]) -> None:
-        ContentItem.objects.insert([
-            ContentItem(page=page, content=content_item) for content_item in content_items
-        ], load_bulk=False)
+    def __init__(self) -> None:
+        self._db = get_db()
+
+    def create_range(self, content_item_builders: list[ContentItemBuilder]) -> None:
+        content_items = [content_item_builder.build().to_mongo() for content_item_builder in content_item_builders]
+
+        for language, items in groupby(content_items, lambda item: item["language"]):
+            self._db[f"{language}_content_item"].insert_many(items)

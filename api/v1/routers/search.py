@@ -34,6 +34,6 @@ def search(
         query=query,
         language=Language.from_lingua_language(language),
         pages=[],
-        createdAt=end_time,
-        timeTaken=(end_time - start_time).microseconds // 1000
+        created_at=end_time,
+        time_taken=(end_time - start_time).microseconds // 1000
     )
