@@ -4,15 +4,15 @@ from starlette.middleware.cors import CORSMiddleware
 
 from api.settings import settings
 from api.v1 import api_router
-from modules.common import settings as common_settings
+from common import settings as common_settings
 
 
 app = FastAPI(
-    title=settings.PROJECT_TITLE,
-    on_startup=[lambda: connect(common_settings.MONGO_DB_NAME, host=common_settings.MONGO_CONNECTION_STRING)],
+    title=settings.project_title,
+    on_startup=[lambda: connect(common_settings.db_name, host=common_settings.db_connection_string)],
     on_shutdown=[disconnect]
 )
 
 app.add_middleware(CORSMiddleware, allow_methods=["GET"])
 
-app.include_router(api_router, prefix=settings.V1_PREFIX)
+app.include_router(api_router, prefix=settings.v1_prefix)
