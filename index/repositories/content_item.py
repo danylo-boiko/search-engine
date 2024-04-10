@@ -11,7 +11,7 @@ class ContentItemRepository:
         embedding: list[float],
         language: Language,
         top_k: int = 5,
-        min_matching_score: float = 0.75
+        min_score: float = 0.75
     ) -> CommandCursor:
         return ContentItem.objects.aggregate([{
             "$vectorSearch": {
@@ -25,11 +25,11 @@ class ContentItemRepository:
                 "page": 1,
                 "content": 1,
                 "language": 1,
-                "matching_score": {"$meta": "vectorSearchScore"}
+                "score": {"$meta": "vectorSearchScore"}
             }}, {
             "$match": {
                 "$and": [
-                    {"matching_score": {"$gte": min_matching_score}},
+                    {"score": {"$gte": min_score}},
                     {"language": language}
                 ]
             }}

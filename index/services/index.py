@@ -7,7 +7,7 @@ from common import settings
 from common.enums import Language
 from index.builders import PageBuilder, ContentItemBuilder
 from index.repositories import PageRepository, ContentItemRepository
-from index.schemas import PageMatches, ContentMatching
+from index.schemas import PageMatches, ContentMatch
 
 
 class IndexService:
@@ -33,8 +33,8 @@ class IndexService:
             page_aggregations.append(PageMatches(
                 title=page.title,
                 url=page.url,
-                content_items=[
-                    ContentMatching(content=content_item["content"], score=content_item["matching_score"])
+                content_matches=[
+                    ContentMatch(content=content_item["content"], score=content_item["score"])
                     for content_item in content_items
                     if content_item["page"] == page.id
                 ]
