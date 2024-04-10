@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class ContentMatching:
+class ContentMatch:
     content: str
     score: float
 
@@ -11,4 +11,4 @@ class ContentMatching:
 class PageMatches:
     title: str
     url: str
-    content_items: list[ContentMatching]
+    content_matches: list[ContentMatch]

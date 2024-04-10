@@ -1,6 +1,6 @@
 from re import sub
 from typing import Iterable
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 
 from scrapy import Request
 from scrapy.http import Response
@@ -19,8 +19,8 @@ class WikipediaSpider(BaseSpider):
         self.language = Language(self.queue[:2])
 
         self.sub_paths_to_ignore_content = {
-            Language.ENGLISH: ["wikipedia", "category", "help", "list", "file"],
-            Language.UKRAINIAN: ["вікіпедія", "категорія", "довідка", "список", "файл"]
+            Language.ENGLISH: ["wikipedia", "category", "help", "list", "file", "template"],
+            Language.UKRAINIAN: ["вікіпедія", "категорія", "довідка", "список", "файл", "шаблон"]
         }
 
     def parse(self, response: Response, **kwargs: dict) -> Iterable[CrawledPage | Request]:
@@ -37,7 +37,7 @@ class WikipediaSpider(BaseSpider):
         )
 
     def _content_has_to_be_ignored(self, url: str) -> bool:
-        path = urlparse(url).path.lower()
+        path = unquote(urlparse(url).path).lower()
 
         for sub_path in self.sub_paths_to_ignore_content[self.language]:
             if path.startswith(f"/wiki/{sub_path}:"):
@@ -51,7 +51,7 @@ class WikipediaSpider(BaseSpider):
         for paragraph in response.css("div#mw-content-text p:not(:has(table)):not(:has(ul)):not(:has(ol))"):
             paragraph_content = "".join(item for item in paragraph.css("::text").extract())
 
-            paragraph_content = self._clean_paragraph_content(paragraph_content)
+            paragraph_content = self._clean_content(paragraph_content)
 
             if not self._has_required_words_count(paragraph_content) or self._is_list_header(paragraph_content):
                 continue
@@ -63,7 +63,7 @@ class WikipediaSpider(BaseSpider):
 
         return content_items
 
-    def _clean_paragraph_content(self, content: str) -> str:
+    def _clean_content(self, content: str) -> str:
         # remove cites
         content = sub(r"\[[^]]*]", "", content)
 

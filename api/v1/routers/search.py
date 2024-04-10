@@ -41,7 +41,7 @@ def search(
             PageSummary(
                 title=page.title,
                 url=page.url,
-                summary=" ".join(content_item.content for content_item in page.content_items)
+                summary=" ".join(content_match.content for content_match in page.content_matches)
             ) for page in pages
         ],
         created_at=end_time,
