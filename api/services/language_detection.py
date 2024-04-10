@@ -15,7 +15,7 @@ class LanguageDetectionService:
         if not territory_language_info:
             return self._lingua_detector.detect_language_of(text)
 
-        language_confidence_map = {}
+        language_confidence_map = dict()
 
         for language_confidence in self._lingua_detector.compute_language_confidence_values(text):
             language_info = territory_language_info.get(language_confidence.language.iso_code_639_1.name.lower())

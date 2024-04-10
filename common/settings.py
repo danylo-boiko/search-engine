@@ -6,6 +6,7 @@ from common.enums import Language
 
 class Settings(BaseSettings):
     supported_languages: set[Language] = {Language.ENGLISH, Language.UKRAINIAN}
+    embedding_model_name: str = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
     db_name: str
     db_connection_string: str
 
