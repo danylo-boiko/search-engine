@@ -8,7 +8,7 @@ class ContentMatch:
 
 
 @dataclass
-class PageMatches:
+class PageMatch:
     title: str
     url: str
     content_matches: list[ContentMatch]

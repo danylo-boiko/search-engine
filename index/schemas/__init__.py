@@ -1,1 +1,1 @@
-from .page_matches import PageMatches, ContentMatch
+from .page_match import PageMatch, ContentMatch

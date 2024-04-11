@@ -4,6 +4,7 @@ from urllib.parse import urlparse, unquote
 
 from scrapy import Request
 from scrapy.http import Response
+from unicodedata import normalize
 
 from common.enums import Language
 from crawler.items import CrawledPage
@@ -16,11 +17,11 @@ class WikipediaSpider(BaseSpider):
     def __init__(self, **kwargs: dict[str, str]) -> None:
         super().__init__(self.name, **kwargs)
 
-        self.language = Language(self.queue[:2])
+        self.language = Language(self.queue.split(".")[0])
 
         self.sub_paths_to_ignore_content = {
-            Language.ENGLISH: ["wikipedia", "category", "help", "list", "file", "template"],
-            Language.UKRAINIAN: ["вікіпедія", "категорія", "довідка", "список", "файл", "шаблон"]
+            Language.ENGLISH: ["wikipedia", "category", "help", "list", "file", "template", "portal"],
+            Language.UKRAINIAN: ["вікіпедія", "категорія", "довідка", "список", "файл", "шаблон", "портал"]
         }
 
     def parse(self, response: Response, **kwargs: dict) -> Iterable[CrawledPage | Request]:
@@ -64,11 +65,14 @@ class WikipediaSpider(BaseSpider):
         return content_items
 
     def _clean_content(self, content: str) -> str:
+        # remove \x... characters
+        content = normalize("NFKD", content)
+
         # remove cites
         content = sub(r"\[[^]]*]", "", content)
 
         # remove breaks
-        content = content.replace("\n", "")
+        content = content.replace("\n", " ")
 
         # remove consecutive dots
         content = sub(r"\.{2,}", "", content)
@@ -78,5 +82,5 @@ class WikipediaSpider(BaseSpider):
 
         return content.strip()
 
-    def _is_list_header(self, text: str) -> bool:
-        return text.endswith(":")
+    def _is_list_header(self, content: str) -> bool:
+        return content.endswith(":")

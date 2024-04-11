@@ -11,7 +11,7 @@ class ContentItemRepository:
         embedding: list[float],
         language: Language,
         top_k: int = 5,
-        min_score: float = 0.75
+        min_score: float = 0.8
     ) -> CommandCursor:
         return ContentItem.objects.aggregate([{
             "$vectorSearch": {

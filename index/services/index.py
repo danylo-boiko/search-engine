@@ -7,7 +7,7 @@ from common import settings
 from common.enums import Language
 from index.builders import PageBuilder, ContentItemBuilder
 from index.repositories import PageRepository, ContentItemRepository
-from index.schemas import PageMatches, ContentMatch
+from index.schemas import PageMatch, ContentMatch
 
 
 class IndexService:
@@ -22,15 +22,15 @@ class IndexService:
 
         self._language_detector = LanguageDetectorBuilder.from_all_languages().with_preloaded_language_models().build()
 
-    def find_pages(self, query: str, language: Language) -> list[PageMatches]:
+    def find_pages(self, query: str, language: Language) -> list[PageMatch]:
         content_items = list(self._content_item_repository.get_similar(self._get_embedding(query), language))
 
         pages = self._page_repository.get_by_ids(set(content_item["page"] for content_item in content_items))
 
-        page_aggregations = list()
+        page_matches = list()
 
         for page in pages:
-            page_aggregations.append(PageMatches(
+            page_matches.append(PageMatch(
                 title=page.title,
                 url=page.url,
                 content_matches=[
@@ -40,15 +40,15 @@ class IndexService:
                 ]
             ))
 
-        return page_aggregations
+        return page_matches
 
     def index_page(self, title: str, url: str, content_items: list[str]) -> None:
         if self._read_only:
             raise RuntimeError("The service is running in read-only mode")
 
-        detected_languages = self._language_detector.detect_languages_in_parallel_of(content_items)
+        content_languages = self._language_detector.detect_languages_in_parallel_of(content_items)
 
-        if not any(language in settings.supported_languages_lingua for language in detected_languages):
+        if not any(language in settings.supported_languages_lingua for language in content_languages):
             return
 
         created_page = self._page_repository.create(
@@ -63,7 +63,7 @@ class IndexService:
 
         content_item_builders = list()
 
-        for content, language in zip(content_items, detected_languages):
+        for content, language in zip(content_items, content_languages):
             if language not in settings.supported_languages_lingua:
                 continue
 
@@ -77,7 +77,7 @@ class IndexService:
 
         self._content_item_repository.create_range(content_item_builders)
 
-        info(f"Indexed page {created_page.id} {created_page.title}")
+        info(f"Indexed page '{created_page.title}' with object id '{created_page.id}'")
 
     def _get_embedding(self, text: str) -> list[float]:
         return self._embedding_model.encode(text).tolist()

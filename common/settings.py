@@ -1,4 +1,5 @@
 from lingua import Language as LinguaLanguage
+from pydantic import Extra
 from pydantic_settings import BaseSettings
 
 from common.enums import Language
@@ -6,13 +7,16 @@ from common.enums import Language
 
 class Settings(BaseSettings):
     supported_languages: set[Language] = {Language.ENGLISH, Language.UKRAINIAN}
-    embedding_model_name: str = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
+    embedding_model_name: str = "paraphrase-multilingual-mpnet-base-v2"
     db_name: str
     db_connection_string: str
 
     @property
     def supported_languages_lingua(self) -> set[LinguaLanguage]:
         return set(language.to_lingua_language() for language in self.supported_languages)
+
+    class Config:
+        extra = Extra.allow
 
 
 settings = Settings(_env_file=".env")
