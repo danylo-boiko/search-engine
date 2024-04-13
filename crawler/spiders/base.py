@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 
 from scrapy import Spider
 from scrapy.crawler import Crawler
@@ -27,6 +27,9 @@ class BaseSpider(Spider):
 
     def _get_domain(self, url: str) -> str:
         return urlparse(url).netloc
+
+    def _get_path(self, url: str) -> str:
+        return unquote(urlparse(url).path)
 
     def _get_title(self, response: Response) -> str:
         return response.css("title::text").get().strip()

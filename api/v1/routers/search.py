@@ -5,11 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 
 from api.schemas import SearchResponse, PageSummary
 from api.services import LanguageDetectionService
-from api.v1.dependencies import get_language_detection_service, get_index_service
+from api.v1.dependencies import get_language_detection_service, get_search_service
 from api.validators import query_validator
 from common import settings
 from common.enums import Language
-from index.services import IndexService
+from index.services import SearchService
 
 
 router = APIRouter()
@@ -20,7 +20,7 @@ def search(
     request: Request,
     query: str = Depends(query_validator),
     language_detection_service: LanguageDetectionService = Depends(get_language_detection_service),
-    index_service: IndexService = Depends(get_index_service)
+    search_service: SearchService = Depends(get_search_service)
 ) -> SearchResponse:
     start_time = datetime.utcnow()
 
@@ -29,7 +29,7 @@ def search(
     if language not in settings.supported_languages_lingua:
         raise HTTPException(status_code=400, detail=f"{language.name.capitalize()} language is not supported")
 
-    pages = index_service.find_pages(query, Language.from_lingua_language(language))
+    pages = search_service.find_pages(query, Language.from_lingua_language(language))
 
     end_time = datetime.utcnow()
 

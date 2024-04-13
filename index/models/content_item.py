@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, ReferenceField, EnumField, CASCADE, ListField
+from mongoengine import Document, StringField, ReferenceField, EnumField, ListField, CASCADE
 
 from common.enums import Language
 from index.models.page import Page

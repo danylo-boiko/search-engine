@@ -1,6 +1,5 @@
 from re import sub
 from typing import Iterable
-from urllib.parse import urlparse, unquote
 
 from scrapy import Request
 from scrapy.http import Response
@@ -31,14 +30,10 @@ class WikipediaSpider(BaseSpider):
         if self._content_has_to_be_ignored(response.url):
             return
 
-        yield CrawledPage(
-            title=self._get_title(response),
-            url=response.url,
-            content_items=self._parse_content_items(response)
-        )
+        yield CrawledPage(self._get_title(response), response.url, self._parse_content_items(response))
 
     def _content_has_to_be_ignored(self, url: str) -> bool:
-        path = unquote(urlparse(url).path).lower()
+        path = self._get_path(url).lower()
 
         for sub_path in self.sub_paths_to_ignore_content[self.language]:
             if path.startswith(f"/wiki/{sub_path}:"):
